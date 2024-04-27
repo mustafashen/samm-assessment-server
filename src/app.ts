@@ -1,6 +1,6 @@
 import express from "express";
 import index from "./routes/index.js";
-import point from "./routes/point.js";
+import points from "./routes/points.js";
 import initializePointStore from "./utils/init-point-store.js";
 import bodyParser from "body-parser";
 
@@ -9,7 +9,7 @@ import bodyParser from "body-parser";
   const app = express();
   app.use(bodyParser.json());
   app.use(index);
-  app.use("/points", point);
+  app.use("/points", points);
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {

@@ -6,9 +6,9 @@ import { validatePointCreate } from "../validation/new-point.js";
 import { Point } from "../types/points.js";
 import { deletePoint } from "../utils/delete-point.js";
 
-const point = Router();
+const points = Router();
 
-point.post("/create", async (req, res) => {
+points.post("/create", async (req, res) => {
   try {
     if (!validatePointCreate(req.body))
       throw new Error("Invalid input for point creation");
@@ -51,7 +51,7 @@ point.post("/create", async (req, res) => {
   }
 });
 
-point.get("/read", async (req, res) => {
+points.get("/read", async (req, res) => {
   try {
     const readResponse = await readPoints();
 
@@ -91,7 +91,7 @@ point.get("/read", async (req, res) => {
   }
 });
 
-point.delete("/:pointId", async (req, res) => {
+points.delete("/:pointId", async (req, res) => {
   try {
     const deleteResponse = await deletePoint(req.params.pointId);
     if (deleteResponse.success) {
@@ -117,4 +117,4 @@ point.delete("/:pointId", async (req, res) => {
   } catch (error: unknown) {}
 });
 
-export default point;
+export default points;
