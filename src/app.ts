@@ -6,8 +6,11 @@ import bodyParser from "body-parser";
 import cors from "cors"
 
 (async function main() {
-  console.log(await initializePointStore());
   const app = express();
+  app.use(async (req, res, next) => {
+    await initializePointStore();
+    next()
+  })
   app.use(cors())
   app.use(bodyParser.json());
   app.use(index);

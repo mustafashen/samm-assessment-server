@@ -12,7 +12,6 @@ const points = Router();
 
 points.post("/create", async (req, res) => {
   try {
-    console.log(req.body)
     if (!validatePointCreate(req.body))
       throw new Error("Invalid input for point creation");
 
@@ -67,8 +66,8 @@ points.get("/read", async (req, res) => {
         })),
       });
     } else if ("message" in readResponse) {
-      res.status(500).send({
-        data: [],
+      const statusCode = readResponse.name === 'NotFoundError' ? 404 : 500;
+      res.status(statusCode).send({
         errors: [
           {
             title: readResponse.name ? readResponse.name : "Point read error",
@@ -83,7 +82,6 @@ points.get("/read", async (req, res) => {
       "An unknown error occurred while reading points."
     );
     res.status(500).send({
-      data: [],
       errors: [
         {
           title: message.name ? message.name : "Point read error",
@@ -108,7 +106,6 @@ points.get("/download", async (req, res) => {
       "An unknown error occurred while downloading points."
     );
     res.status(500).send({
-      data: [],
       errors: [
         {
           title: message.name ? message.name : "Point download error",
@@ -131,7 +128,8 @@ points.delete("/:pointId", async (req, res) => {
         },
       });
     } else if ("message" in deleteResponse) {
-      res.status(500).send({
+      const statusCode = deleteResponse.name === 'NotFoundError' ? 404 : 500;
+      res.status(statusCode).send({
         errors: [
           {
             title: deleteResponse.name

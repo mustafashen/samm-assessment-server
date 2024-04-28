@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { cwd, title } from "process";
+import { cwd } from "process";
 import { generateErrorMessage } from "./generate-message.js";
 
 export async function readPoints() {
@@ -9,10 +9,19 @@ export async function readPoints() {
   try {
     const pointsFile: Buffer = await readFile(pointPath);
     const points = pointsFile.toString("utf-8");
-    return {
-      success: true,
-      data: JSON.parse(points),
-    };
+
+    if (points) {
+      return {
+        success: true,
+        data: JSON.parse(points),
+      };  
+    }
+
+    const notFoundError = new Error();
+    notFoundError.name = "NotFoundError";
+    notFoundError.message = "Points not found";
+    throw notFoundError;
+    
   } catch (error: unknown) {
     return generateErrorMessage(error, "Unknown error occurred")
   }

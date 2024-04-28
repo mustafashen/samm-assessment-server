@@ -14,7 +14,7 @@ export default async function initializePointStore() {
 
   if (!isStoreDirectoryExist) {
     try {
-      await fs.mkdir(cwd());
+      await fs.mkdir(storePath);
       await fs.writeFile(pointsPath, JSON.stringify([]));
 
       return {

@@ -29,8 +29,10 @@ export async function deletePoint(pointId: string) {
       };
     }
 
-    throw new Error("Point not found");
-    
+    const notFoundError = new Error();
+    notFoundError.name = "NotFoundError";
+    notFoundError.message = "Point not found";
+    throw notFoundError;
   } catch (error) {
     return generateErrorMessage(
       error,
