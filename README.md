@@ -2,7 +2,7 @@
 
 ### METHODS:
 
-#### GET /point
+#### GET /points
 Returns:
 ```
 {
@@ -18,7 +18,7 @@ Returns:
 }
 ```
 
-#### POST /point
+#### POST /points
 Returns:
 ```
 {
@@ -33,7 +33,7 @@ Returns:
   }
 }
 ```
-#### DELETE /point/:id
+#### DELETE /points/:id
 Returns:
 ```
 {
