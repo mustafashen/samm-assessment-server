@@ -5,11 +5,14 @@ import { createPoint } from "../utils/create-point.js";
 import { validatePointCreate } from "../validation/new-point.js";
 import { Point } from "../types/points.js";
 import { deletePoint } from "../utils/delete-point.js";
+import downloadPoints from "../utils/download-points.js";
+import { ReadStream } from "fs";
 
 const points = Router();
 
 points.post("/create", async (req, res) => {
   try {
+    console.log(req.body)
     if (!validatePointCreate(req.body))
       throw new Error("Invalid input for point creation");
 
@@ -91,6 +94,31 @@ points.get("/read", async (req, res) => {
   }
 });
 
+points.get("/download", async (req, res) => {
+  try {
+    const fileStream = downloadPoints();
+    if (fileStream instanceof ReadStream) {
+      res.header("Content-Type", "application/octet-stream");
+      res.header("Content-Disposition", "attachment; filename=points.json");
+      fileStream.pipe(res);
+    }
+  } catch (error) {
+    const message = generateErrorMessage(
+      error,
+      "An unknown error occurred while downloading points."
+    );
+    res.status(500).send({
+      data: [],
+      errors: [
+        {
+          title: message.name ? message.name : "Point download error",
+          detail: message,
+        },
+      ],
+    });
+  }
+});
+
 points.delete("/:pointId", async (req, res) => {
   try {
     const deleteResponse = await deletePoint(req.params.pointId);
@@ -114,7 +142,20 @@ points.delete("/:pointId", async (req, res) => {
         ],
       });
     }
-  } catch (error: unknown) {}
+  } catch (error: unknown) {
+    const message = generateErrorMessage(
+      error,
+      "An unknown error occurred while deleting points."
+    );
+    res.status(500).send({
+      errors: [
+        {
+          title: message.name ? message.name : "Point deletion error",
+          detail: message,
+        },
+      ],
+    });
+  }
 });
 
 export default points;
